@@ -1,4 +1,4 @@
-from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask import Flask, flash, redirect, render_template, request, session, url_for, jsonify
 from authlib.integrations.flask_client import OAuth
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -68,11 +68,10 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-def train_module():
-    pass
+
 
 # DO NOT TOUCH
-@app.route('/')
+@app.route('/', methods=['GET'])
 def Index():
     user = session.get('user')
     if user:
@@ -80,7 +79,7 @@ def Index():
     return '<a href="/login">Sign in with Google</a>'
 
 # DO NOT TOUCH
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     return google.authorize_redirect(url_for('auth_callback', _external=True))
 
@@ -93,7 +92,7 @@ def auth_callback():
     return redirect(url_for('Index'))
 
 @login_required
-@app.route('/chat')
+@app.route('/chat', methods=['GET', 'POST'])
 def Chat():
     if request.method == "POST":
         question = request.form.get("question")
@@ -102,3 +101,18 @@ def Chat():
 
     # TO-DO FRONTEND: chat.html
     return render_template('chat.html')
+
+
+@app.route('/api/data', methods=['GET'])
+def get_data():
+    # TO-DO: Create Token for each user
+
+
+    # TO-DO: Call Send message
+
+
+    # TO-DO: Create a dictionary, Token, question, answer
+
+    # return everything
+    return jsonify({"Token" : Token, "Question" : question, "Answer" : answer})
+    pass
